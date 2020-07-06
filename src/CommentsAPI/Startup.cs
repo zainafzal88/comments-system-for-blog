@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Amazon.DynamoDBv2;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,15 @@ namespace CommentsAPI
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            var dynamoDbConfig = Configuration.GetSection("DynamoDb");
+            var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
+
+                services.AddSingleton<IAmazonDynamoDB>(sp =>
+                {
+                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl") };
+                    return new AmazonDynamoDBClient(clientConfig);
+                });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>{
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Comments API", Version = "v1" });

@@ -1,23 +1,44 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommentsAPI.Controllers
 { 
     [Route("api/[controller]")]
+    [ApiController]
     public class CommentsController : ControllerBase
     {
-        // GET api/comments
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private const string TableName = "comments";
+        private readonly IAmazonDynamoDB _amazonDynamoDb;
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        public CommentsController(IAmazonDynamoDB amazonDynammoDb)
         {
-            return "value";
+            _amazonDynamoDb = amazonDynammoDb;
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<string>> Get(int id)
+        {
+            var request = new GetItemRequest
+            {
+                TableName = TableName,
+                Key = new Dictionary<string, AttributeValue>
+                {
+                    {
+                        "id",
+                        new AttributeValue
+                        {
+                            S = id.ToString()
+                        }
+                    }
+                }
+            };
+
+            var response = await _amazonDynamoDb.GetItemAsync(request);
+
+            return response.Item["username"].S;
         }
 
         // POST api/values
