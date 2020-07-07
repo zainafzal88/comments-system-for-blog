@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
@@ -18,6 +20,18 @@ namespace CommentsAPI.Controllers
             _amazonDynamoDb = amazonDynammoDb;
         }
         
+        [HttpGet]
+        public async Task<ScanResponse> GetComments()
+        {
+            var request = new ScanRequest
+            {
+                    TableName = TableName
+            };
+
+            var response = await _amazonDynamoDb.ScanAsync(request);
+            return response;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<string>> Get(int id)
         {
@@ -41,19 +55,16 @@ namespace CommentsAPI.Controllers
             return response.Item["username"].S;
         }
 
-        // POST api/values
         [HttpPost]
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
-
-        // DELETE api/values/5
+        
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

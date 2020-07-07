@@ -2,7 +2,7 @@ using System;
 using Amazon.Lambda.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-e
+
 namespace CommentsAPI
 {
     /// <summary>
