@@ -81,8 +81,18 @@ namespace CommentsAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(string id)
         {
+            var request = new DeleteItemRequest
+            {
+                TableName = TableName,
+                Key = new Dictionary<string, AttributeValue>()
+                {
+                    {"id", new AttributeValue{S = id}}
+                }
+            };
+            
+            await _amazonDynamoDb.DeleteItemAsync(request);
         }
     }
 }
