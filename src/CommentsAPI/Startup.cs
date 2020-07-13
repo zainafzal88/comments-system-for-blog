@@ -10,8 +10,6 @@ namespace CommentsAPI
 {
     public class Startup
     {
-        public const string AppS3BucketKey = "AppS3Bucket";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,16 +23,27 @@ namespace CommentsAPI
             var dynamoDbConfig = Configuration.GetSection("DynamoDb");
             var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
 
+            if (runLocalDynamoDb)
+            {
                 services.AddSingleton<IAmazonDynamoDB>(sp =>
                 {
-                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl") };
+                    var clientConfig = new AmazonDynamoDBConfig
+                        {ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl")};
                     return new AmazonDynamoDBClient(clientConfig);
                 });
+            }
+            else
+            {
+                // Deploy to AWS 
+                services.AddAWSService<IAmazonDynamoDB>();
+            }
+            
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
 
             services.AddControllers();
             services.AddSwaggerGen(c =>{
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Comments API", Version = "v1" });
-                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

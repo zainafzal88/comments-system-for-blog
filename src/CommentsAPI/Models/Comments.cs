@@ -1,5 +1,3 @@
-using System;
-
 namespace CommentsAPI.Models
 {
     public class Comments
