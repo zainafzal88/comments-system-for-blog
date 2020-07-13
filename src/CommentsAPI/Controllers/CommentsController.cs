@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
@@ -63,7 +64,7 @@ namespace CommentsAPI.Controllers
                 {"username", new AttributeValue{S = comment.Username}},
                 {"comment", new AttributeValue{S = comment.Comment}},
                 {"postId", new AttributeValue{S = comment.PostId}},
-                {"date", new AttributeValue{S = comment.Date}}
+                {"date", new AttributeValue{S = DateTime.Now.ToString()}}
             };
 
             PutItemRequest request = new PutItemRequest
