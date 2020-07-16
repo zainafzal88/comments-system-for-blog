@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using CommentsAPI.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CommentsAPI.Controllers
 { 
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")] 
     public class CommentsController : ControllerBase
     {
         private const string TableName = "comments";
