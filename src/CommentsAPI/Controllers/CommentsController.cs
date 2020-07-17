@@ -60,9 +60,10 @@ namespace CommentsAPI.Controllers
         [HttpPost]
         public async Task Post([FromBody] Comments comment)
         {
+            Guid uuid = Guid.NewGuid();
             var item = new Dictionary<string, AttributeValue>()
             {
-                {"id", new AttributeValue{S = comment.Id}},
+                {"id", new AttributeValue{S = uuid.ToString()}},
                 {"username", new AttributeValue{S = comment.Username}},
                 {"comment", new AttributeValue{S = comment.Comment}},
                 {"postId", new AttributeValue{S = comment.PostId}},

@@ -9,7 +9,5 @@ namespace CommentsAPI.Models
         public string Comment { get; set; }
         
         public string PostId { get; set; }
-        
-        public string Date { get; set; }
     }
 }
