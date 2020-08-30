@@ -34,8 +34,8 @@ namespace CommentsAPI.Controllers
             return response;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<string>> Get(int id)
+        [HttpGet("{url}")]
+        public async Task<ActionResult<string>> Get(string url)
         {
             var request = new GetItemRequest
             {
@@ -43,10 +43,10 @@ namespace CommentsAPI.Controllers
                 Key = new Dictionary<string, AttributeValue>
                 {
                     {
-                        "id",
+                        "postId",
                         new AttributeValue
                         {
-                            S = id.ToString()
+                            S = url
                         }
                     }
                 }
